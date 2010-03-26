@@ -1,0 +1,14 @@
+credentials: &credentials
+  adapter: postgresql
+
+development:
+  <<: *credentials
+  database: shawty_development
+
+test:
+  <<: *credentials
+  database: shawty_test
+
+staging:
+  <<: *credentials
+  database: shawty_staging

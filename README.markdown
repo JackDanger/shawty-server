@@ -29,7 +29,11 @@ Imagine trying to fit that in a text message. Instead, how about:
 
 Yes. See the [shawty-client](http://github.com/JackDanger/shawty-client) gem for details:
 
-    Shawty.new("http://url.myapp.com/").shrink("http://myapp.com/accounts/megacorp/invoices?single_access_token=5ASD32ADf89JKASF2346")
+    Shawty.new(
+        "http://url.myapp.com/"
+      ).shrink(
+        "http://myapp.com/accounts/megacorp/invoices?single_access_token=5ASD32ADf89JKASF2346"
+      )
     # => http://url.myapp.com/a7D
     ## Saved on your url.myapp.com shawty server and usable immediately
 

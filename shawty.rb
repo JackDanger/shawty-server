@@ -28,9 +28,8 @@ get '/:id' do
 end
 
 post '*' do
-  pass if params[:splat].empty?
+  url = request.env['REQUEST_URI']
 
-  url = params[:splat].first
   url = url[1, url.size] if url.mb_chars.first == '/'
 
   pass if url.empty?

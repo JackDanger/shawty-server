@@ -12,20 +12,40 @@ get '/' do
   "Post to '/' to save a url and receive a plaintext short url in response\nExample: POST /http://some.url/at.someplace"
 end
 
-post '/:url' do
-  quoted = quote(params[:url])
+get '/:id' do
+  pass unless record = find_by_id(params[:id].alphadecimal)
+
+  redirect record['url'], 301
+end
+
+post '*' do
+  pass if params[:splat].empty?
+
+  url = params[:splat].first
+  url = url[1, url.size] if url.chars.first == '/'
+
+  quoted = quote url
 
   found = execute %Q{ SELECT id FROM #{table_name} WHERE url = #{quoted} }
 
-  if found.empty?
+  if found.any?
+    id = found['id']
+  else
     execute %Q{ INSERT INTO #{table_name} (url, id) VALUES (#{quoted}, nextval('shawty_id_seq')) }
     found = execute %Q{ SELECT MAX(id) from #{table_name} }
+    id = found.first['max']
   end
 
-  found.first.alphadecimal
+  "http://#{request.host}/#{id.alphadecimal}"
 end
 
+
 ## Helpers
+
+def find_by_id(id)
+  result = execute %Q{ SELECT url FROM #{table_name} WHERE id = #{quote id.to_i} }
+  return result.map.first if result.map.length
+end
 
 def execute sql
   ActiveRecord::Base.connection.execute sql
@@ -63,5 +83,6 @@ end
 
 configure :test do
   ActiveRecord::Base.establish_connection database_config['test']
+  # ActiveRecord::Base.logger = Logger.new(STDOUT)
   initialize_database
 end

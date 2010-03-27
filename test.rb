@@ -46,6 +46,9 @@ class ShawtyTest < Test::Unit::TestCase
 
       get "/#{id.alphadecimal}"
     }
+    should "return a 301 redirect" do
+      assert_equal 301, last_response.status
+    end
     should "return Location: header to url" do
       assert_equal 'http://google.com/',
                    last_response.headers['Location']
@@ -54,19 +57,20 @@ class ShawtyTest < Test::Unit::TestCase
 
   context "on POST to /" do
     setup {
-      post '/', 'http://some.url/path.ext'
+      post '/http://some.url/path.ext'
     }
     should "return ok" do
       assert last_response.ok?
     end
     should_change "record count", :by => 1 do
-      execute(%Q{ SELECT max(id) FROM #{table_name} }).first['id'].to_i
+      execute(%Q{ SELECT COUNT(*) FROM #{table_name} }).first['count'].to_i
     end
     should "save the url" do
-      assert execute(%Q{
-                SELECT url FROM #{table_name}
+      res = execute(%Q{
+                SELECT * FROM #{table_name}
                 WHERE  url = #{quote 'http://some.url/path.ext'}
-              }).one?
+              })
+      assert res.one?, res.map.inspect
     end
   end
 end

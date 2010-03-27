@@ -32,19 +32,16 @@ class ShawtyTest < Test::Unit::TestCase
 
   context "on GET to / with url" do
     setup {
-      execute %Q{
+      id = select_column %Q{
         INSERT INTO #{table_name} (url, id)
         VALUES (
           #{quote 'http://google.com/'},
           nextval('shawty_id_seq')
         )
+        RETURNING id
       }
-      id = execute(%Q{
-              SELECT id FROM #{table_name}
-              WHERE url = #{quote 'http://google.com/'}
-           }).first['id'].to_i
 
-      get "/#{id.alphadecimal}"
+      get "/#{id.to_i.alphadecimal}"
     }
     should "return a 301 redirect" do
       assert_equal 301, last_response.status
@@ -63,21 +60,20 @@ class ShawtyTest < Test::Unit::TestCase
       assert last_response.ok?
     end
     should_change "record count", :by => 1 do
-      execute(%Q{ SELECT COUNT(*) FROM #{table_name} }).first['count'].to_i
+      select_column(%Q{ SELECT COUNT(*) FROM #{table_name} }).to_i
     end
     should "save the url" do
-      res = execute(%Q{
-                SELECT * FROM #{table_name}
-                WHERE  url = #{quote 'http://some.url/path.ext'}
-              })
-      assert res.one?, res.map.inspect
-    end
-    should "display the shortened url" do
-      id = execute(%Q{
+      assert select_column %Q{
                 SELECT id FROM #{table_name}
                 WHERE  url = #{quote 'http://some.url/path.ext'}
-              }).first['id']
-      assert_equal "http://example.org/#{id.alphadecimal}",
+              }
+    end
+    should "display the shortened url" do
+      id = select_column %Q{
+                SELECT id FROM #{table_name}
+                WHERE  url = #{quote 'http://some.url/path.ext'}
+              }
+      assert_equal "http://example.org/#{id.to_i.alphadecimal}",
                    last_response.body
     end
     context "with a url that's been saved previously" do
@@ -88,7 +84,7 @@ class ShawtyTest < Test::Unit::TestCase
         assert last_response.ok?
       end
       should_not_change "record count" do
-        execute(%Q{ SELECT COUNT(*) FROM #{table_name} }).first['count'].to_i
+        select_column(%Q{ SELECT COUNT(*) FROM #{table_name} }).to_i
       end
     end
   end

@@ -17,7 +17,12 @@ get '/' do
 end
 
 get '/:id' do
-  pass unless url = find_url_by_id(params[:id].alphadecimal)
+  url = select_column %Q{
+                  SELECT url FROM #{table_name}
+                  WHERE id = #{quote params[:id].alphadecimal.to_i}
+                }
+
+  pass unless url
 
   redirect url, 301
 end
@@ -26,33 +31,27 @@ post '*' do
   pass if params[:splat].empty?
 
   url = params[:splat].first
-  url = url[1, url.size] if url.chars.first == '/'
+  url = url[1, url.size] if url.mb_chars.first == '/'
 
   pass if url.empty?
 
   quoted = quote url
 
-  found = execute %Q{ SELECT id FROM #{table_name} WHERE url = #{quoted} }
+  id = select_column %Q{ SELECT id FROM #{table_name} WHERE url = #{quoted} }
 
-  if found.any?
-    id = found.first['id']
-  else
-    found = execute %Q{
+  id ||= select_column %Q{
           INSERT INTO #{table_name} (url, id) VALUES (#{quoted}, nextval('shawty_id_seq'))
           RETURNING id
         }
-    id = found.first['id']
-  end
 
-  "http://#{request.host}/#{id.alphadecimal}"
+  "http://#{request.host}/#{id.to_i.alphadecimal}"
 end
 
 
 ## Helpers
 
-def find_url_by_id(id)
-  result = execute %Q{ SELECT url FROM #{table_name} WHERE id = #{quote id.to_i} }
-  return result.map.first['url'] if result.map.length > 0
+def select_column sql
+  connection.select_rows(sql).flatten.first
 end
 
 def execute sql

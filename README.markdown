@@ -4,7 +4,7 @@
 The Shawty gem is the simplest and fastest Ruby url-shortening app. Run your own server that works like [tinyurl.com](http://tinyurl.com) or [is.gd](http://is.gd).
 
 
-## What you need to get this running
+## Instant installation and deploy
 
 * Clone this: `git clone git://github.com/JackDanger/shawty-server.git`
 * Signup for an account at Heroku ([better details here](http://github.com/sinatra/heroku-sinatra-app))

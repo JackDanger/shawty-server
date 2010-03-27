@@ -7,6 +7,7 @@ begin
     gem.email = "gitcommit@6brand.com"
     gem.homepage = "http://github.com/JackDanger/shawty-server"
     gem.authors = ["Jack Danger Canty"]
+    gem.add_dependency "alphadecimal", ">= 1.0.1"
     gem.add_development_dependency "active_record", ">= 0"
     gem.add_development_dependency "shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

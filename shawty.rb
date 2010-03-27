@@ -9,7 +9,11 @@ require 'alphadecimal'
 ## Application
 
 get '/' do
-  "Post to '/' to save a url and receive a plaintext short url in response\nExample: POST /http://some.url/at.someplace"
+  "Post to '/' to save a url and receive a plaintext short url in response" +
+  "<br />" +
+  "Example: POST /http://some.url/at.someplace" +
+  "<br />" +
+  "<form action=/ method=POST onsubmit='if(\"\"==this.url.value)return false;else{this.action=\"/\"+this.url.value}'><input type=text name='url' /><input type=submit value='Get Shawty' /></form>"
 end
 
 get '/:id' do
@@ -23,6 +27,8 @@ post '*' do
 
   url = params[:splat].first
   url = url[1, url.size] if url.chars.first == '/'
+
+  pass if url.empty?
 
   quoted = quote url
 
@@ -48,7 +54,7 @@ end
 
 def find_url_by_id(id)
   result = execute %Q{ SELECT url FROM #{table_name} WHERE id = #{quote id.to_i} }
-  return result.map.first['url'] if result.map.length
+  return result.map.first['url'] if result.map.length > 0
 end
 
 def execute sql

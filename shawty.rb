@@ -31,8 +31,12 @@ post '*' do
   if found.any?
     id = found.first['id']
   else
-    execute %Q{ INSERT INTO #{table_name} (url, id) VALUES (#{quoted}, nextval('shawty_id_seq')) }
-    found = execute %Q{ SELECT MAX(id) from #{table_name} }
+    connection.transaction do
+      found = execute %Q{
+          INSERT INTO #{table_name} (url, id) VALUES (#{quoted}, nextval('shawty_id_seq'));
+          SELECT MAX(id) from #{table_name}
+        }
+    end
     id = found.first['max']
   end
 
@@ -48,15 +52,19 @@ def find_url_by_id(id)
 end
 
 def execute sql
-  ActiveRecord::Base.connection.execute sql
+  connection.execute sql
 end
 
 def quote string
-  ActiveRecord::Base.connection.quote string
+  connection.quote string
 end
 
 def table_name
-  ActiveRecord::Base.connection.quote_table_name 'shawty'
+  connection.quote_table_name 'shawty'
+end
+
+def connection
+  ActiveRecord::Base.connection
 end
 
 def initialize_database
@@ -75,8 +83,6 @@ def database_config
 end
 
 def init(environment)
-  puts 'starting in environment'
-  puts environment
   ActiveRecord::Base.establish_connection database_config[environment]
   initialize_database
 end

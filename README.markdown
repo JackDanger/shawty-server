@@ -1,7 +1,7 @@
 # Shawty
 
 
-Shawty is the simplest Ruby url-shortening app ever. Run your own server that works like [tinyurl.com](tinyurl.com).
+The Shawty gem is the simplest and fastest Ruby url-shortening app. Run your own server that works like [tinyurl.com](http://tinyurl.com) or [is.gd](http://is.gd).
 
 
 ## What you need to get this running
@@ -24,7 +24,9 @@ Imagine trying to fit that in a text message. Instead, how about:
 
     http://url.myapp.com/a7D
 
-But that's so hard, right? Nope. (see shawty-client for details):
+## Is it so easy a child can use it?
+
+Yes. See the [shawty-client](http://github.com/JackDanger/shawty-client) gem for details:
 
     Shawty.new("http://url.myapp.com/").shrink("http://myapp.com/accounts/megacorp/invoices?single_access_token=5ASD32ADf89JKASF2346")
     # => http://url.myapp.com/a7D

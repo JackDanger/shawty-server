@@ -18,8 +18,10 @@ Gem::Specification.new do |s|
   s.files = [
     "README.markdown",
      "Rakefile",
+     "VERSION",
      "config.ru",
      "config/database.yml",
+     "shawty-server.gemspec",
      "shawty.rb",
      "test.rb"
   ]

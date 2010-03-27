@@ -11,11 +11,18 @@ require 'alphadecimal'
 ## Application
 
 get '/' do
-  "Post to '/' to save a url and receive a plaintext short url in response" +
-  "<br />" +
-  "Example: POST /http://some.url/at.someplace" +
-  "<br />" +
-  "<form action=/ method=POST onsubmit='if(\"\"==this.url.value)return false;else{this.action=\"/\"+this.url.value}'><input type=text name='url' /><input type=submit value='Get Shawty' /></form>"
+  %Q{
+    <body style='line-height: 1.8em; font-family: Archer, Museo, Helvetica, Georgia; font-size 25px; text-align: center; padding-top: 20%;'>
+      Post to '/' to save a url and receive a plaintext short url in response
+      <br />
+      Example: <pre style='font-family: Iconsolata, monospace;background-color:#EEE'>curl -X POST http://#{request.host}/http://some.url/at.someplace</pre>
+      <br />
+      <form action=/ method=POST onsubmit='if(\"\"==this.url.value)return false;else{this.action=\"/\"+this.url.value}'>
+        <input type=text name='url' />
+        <input type=submit value='Get Shawty' />
+      </form>
+    </body
+}
 end
 
 get '/:id' do

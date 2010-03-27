@@ -37,13 +37,11 @@ post '*' do
   if found.any?
     id = found.first['id']
   else
-    connection.transaction do
-      found = execute %Q{
-          INSERT INTO #{table_name} (url, id) VALUES (#{quoted}, nextval('shawty_id_seq'));
-          SELECT MAX(id) from #{table_name}
+    found = execute %Q{
+          INSERT INTO #{table_name} (url, id) VALUES (#{quoted}, nextval('shawty_id_seq'))
+          RETURNING id
         }
-    end
-    id = found.first['max']
+    id = found.first['id']
   end
 
   "http://#{request.host}/#{id.alphadecimal}"

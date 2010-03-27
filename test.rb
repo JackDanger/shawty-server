@@ -72,5 +72,24 @@ class ShawtyTest < Test::Unit::TestCase
               })
       assert res.one?, res.map.inspect
     end
+    should "display the shortened url" do
+      id = execute(%Q{
+                SELECT id FROM #{table_name}
+                WHERE  url = #{quote 'http://some.url/path.ext'}
+              }).first['id']
+      assert_equal "http://example.org/#{id.alphadecimal}",
+                   last_response.body
+    end
+    context "with a url that's been saved previously" do
+      setup {
+        post '/http://some.url/path.ext'
+      }
+      should "return ok" do
+        assert last_response.ok?
+      end
+      should_not_change "record count" do
+        execute(%Q{ SELECT COUNT(*) FROM #{table_name} }).first['count'].to_i
+      end
+    end
   end
 end

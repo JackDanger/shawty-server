@@ -29,7 +29,7 @@ post '*' do
   found = execute %Q{ SELECT id FROM #{table_name} WHERE url = #{quoted} }
 
   if found.any?
-    id = found['id']
+    id = found.first['id']
   else
     execute %Q{ INSERT INTO #{table_name} (url, id) VALUES (#{quoted}, nextval('shawty_id_seq')) }
     found = execute %Q{ SELECT MAX(id) from #{table_name} }

@@ -13,9 +13,9 @@ get '/' do
 end
 
 get '/:id' do
-  pass unless record = find_by_id(params[:id].alphadecimal)
+  pass unless url = find_url_by_id(params[:id].alphadecimal)
 
-  redirect record['url'], 301
+  redirect url, 301
 end
 
 post '*' do
@@ -42,9 +42,9 @@ end
 
 ## Helpers
 
-def find_by_id(id)
+def find_url_by_id(id)
   result = execute %Q{ SELECT url FROM #{table_name} WHERE id = #{quote id.to_i} }
-  return result.map.first if result.map.length
+  return result.map.first['url'] if result.map.length
 end
 
 def execute sql
@@ -74,15 +74,16 @@ def database_config
   YAML.load(File.read('config/database.yml'))
 end
 
+def init(environment)
+  puts 'starting in environment'
+  puts environment
+  ActiveRecord::Base.establish_connection database_config[environment]
+  initialize_database
+end
+
+
 ## Environments
 
-configure :production do
-  ActiveRecord::Base.establish_connection database_config['production']
-  initialize_database
-end
-
-configure :test do
-  ActiveRecord::Base.establish_connection database_config['test']
-  # ActiveRecord::Base.logger = Logger.new(STDOUT)
-  initialize_database
-end
+configure :development  do init 'development' end
+configure :test         do init 'test'        end
+configure :production   do init 'production'  end

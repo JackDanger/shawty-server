@@ -6,7 +6,7 @@ Shawty is a super simple Ruby url-shortening app that you can use to run your ow
 
 ## What you need to get this running
 
-* Clone this to your hard drive: `git clone git://github.com/JackDanger/shawty.git`
+* Clone this: `git clone git://github.com/JackDanger/shawty.git`
 * Signup for an account at Heroku ([better details here](http://github.com/sinatra/heroku-sinatra-app))
 * push this to Heroku.com: `git push heroku master`
 * Revel.

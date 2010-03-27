@@ -1,10 +1,12 @@
 ## Resources
-require 'rubygems'
+require 'rubygems' # sorry @defunkt, this is easier
 gem 'sinatra', :version => '1.0'
 require 'sinatra'
 require 'active_record'
 gem 'alphadecimal'
 require 'alphadecimal'
+
+
 
 ## Application
 
@@ -28,11 +30,11 @@ get '/:id' do
 end
 
 post '*' do
-  url = request.env['REQUEST_URI']
+  url = request.env['REQUEST_URI'] || Array(params[:splat]).first
 
-  url = url[1, url.size] if url.mb_chars.first == '/'
+  url = url[1, url.size] if url =~ /^\//
 
-  pass if url.empty?
+  pass if url.nil? || '' == url
 
   quoted = quote url
 

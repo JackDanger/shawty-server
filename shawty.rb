@@ -84,7 +84,7 @@ def initialize_database
   execute %Q{
     CREATE TABLE #{table_name} (
       id SERIAL PRIMARY KEY,
-      url varchar(255) UNIQUE
+      url varchar(2048) UNIQUE
     )
   }
 end

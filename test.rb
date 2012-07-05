@@ -5,17 +5,20 @@ require 'test/unit'
 require 'active_support'
 require 'shoulda'
 require 'rack/test'
-require 'shawty'
+require 'pp'
+require File.expand_path('../lib/shawty', __FILE__)
 
 class ShawtyTest < Test::Unit::TestCase
   include Rack::Test::Methods
+  include Shawty::Helpers
+  extend Shawty::Helpers
 
   def setup
     execute "DELETE FROM #{table_name}"
   end
 
   def app
-    Sinatra::Application
+    Shawty
   end
 
   context "on GET to /" do

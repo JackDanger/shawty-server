@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "shawty-server"
-  s.version = "1.1.3"
+  s.version = "1.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jack Danger Canty"]
@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://github.com/JackDanger/shawty-server"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.17"
+  s.rubygems_version = "1.8.24"
   s.summary = "Ultra-lightweight url shortening server for Heroku.com"
 
   if s.respond_to? :specification_version then

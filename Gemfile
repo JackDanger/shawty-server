@@ -1,6 +1,6 @@
 source :rubygems
 
-gem "sinatra"
+gem "sinatra", '1.0.0'
 gem "activerecord"
 gem "activesupport"
 gem "alphadecimal"

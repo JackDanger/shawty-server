@@ -9,5 +9,5 @@ gem "pg"
 group :development, :test do
   gem 'rack-test'
   gem "shoulda", "2.11.0"
-  gem "jeweler"
+  gem 'test-unit'
 end
